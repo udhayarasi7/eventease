@@ -1,0 +1,60 @@
+// scripts/seedVendors.js
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import Vendor from '../models/Vendor.js';
+
+dotenv.config();
+
+async function main() {
+  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/eventease';
+  await mongoose.connect(uri);
+
+  console.log('Connected to DB, seeding vendors...');
+  await Vendor.deleteMany({});
+
+  const vendors = [
+    {
+      name: 'Dreamscape Photography',
+      category: 'photography',
+      price: 85000,
+      location: { city: 'Mumbai', state: 'Maharashtra', country: 'India' },
+      rating: 4.9,
+      reviewsCount: 234,
+      featured: true,
+      contact: { email: 'hello@dreamscape.com', phone: '+91 98765 43210', website: 'www.dreamscape.com' },
+      description: 'Professional wedding photography services.'
+    },
+    {
+      name: 'Ethereal Images Studio',
+      category: 'photography',
+      price: 120000,
+      location: { city: 'Delhi', state: 'NCR', country: 'India' },
+      rating: 4.8,
+      reviewsCount: 189,
+      featured: true,
+      contact: { email: 'studio@ethereal.com', phone: '+91 98765 43211', website: 'www.ethereal.com' },
+      description: 'Studio and wedding photography.'
+    },
+    {
+      name: 'Heartstrings Photography',
+      category: 'photography',
+      price: 65000,
+      location: { city: 'Bangalore', state: 'Karnataka', country: 'India' },
+      rating: 4.7,
+      reviewsCount: 156,
+      contact: { email: 'connect@heartstrings.com', phone: '+91 98765 43212', website: 'www.heartstrings.com' },
+      description: 'Candid and traditional wedding photography.'
+    }
+  ];
+
+  await Vendor.insertMany(vendors);
+
+  console.log('Seed complete. Inserted:', vendors.length);
+  await mongoose.disconnect();
+  process.exit(0);
+}
+
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
