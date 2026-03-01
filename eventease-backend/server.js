@@ -10,7 +10,9 @@ import Message from './models/Message.js';
 import Conversation from './models/Conversation.js';
 
 dotenv.config();
-connectDB(); // Connect to MongoDB
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+} // Connect to MongoDB
 
 const app = express();
 const httpServer = createServer(app);
@@ -27,6 +29,9 @@ const io = new Server(httpServer, {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.status(200).send("API running...");
+});
 
 // Routes
 app.use("/api/auth", autoRoutes);
@@ -135,7 +140,12 @@ app.get('/api/messages/:conversationId', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`✅ Socket.IO server ready`);
-});
+
+if (process.env.NODE_ENV !== "test") {
+  httpServer.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`✅ Socket.IO server ready`);
+  });
+}
+
+export { app, io };
