@@ -6,6 +6,7 @@ describe("Server Test", () => {
   it("should respond from root route", async () => {
     const res = await request(app).get("/");
     expect(res.statusCode).toBe(200);
+    console.log(res.body, "data seeded");
   });
 });
 afterAll(async () => {

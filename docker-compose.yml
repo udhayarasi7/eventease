@@ -13,7 +13,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./eventease-backend/.env
+      - ./eventease-backend/.env.production
   frontend:
     build: "./eventease-frontend"
     ports:

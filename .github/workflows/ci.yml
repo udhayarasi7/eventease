@@ -1,0 +1,52 @@
+name: MERN CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  mongo-init:
+
+    runs-on: ubuntu-latest
+
+    services:
+      image: mongo
+      ports: ['27017:27017']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Wait for MongoDB to be ready
+        run: |
+          until nc -z localhost 27017; do
+            echo "Waiting for MongoDB to be ready..."
+            sleep 1
+          done
+            echo "MongoDB is ready!"
+      - name: Seed MongoDB
+        working-directory: ./eventease-backend
+        run: |
+          npm install
+          node seed.js
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and run tests
+        working-directory: ./eventease-backend
+        run: |
+          npm install
+          npm test
