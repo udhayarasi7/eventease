@@ -37,6 +37,9 @@ jobs:
       - name: Run tests
         working-directory: ./eventease-backend
         env:
-          NODE_ENV: test
-          MONGO_URI: mongodb://localhost:27017/eventease
+         PORT: ${{ secrets.PORT }}
+         MONGO_URI: ${{ secrets.MONGO_URI }}
+         CLIENT_URL: ${{ secrets.CLIENT_URL }}
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
         run: npm test
